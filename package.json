@@ -1,0 +1,23 @@
+{
+  "name": "certificate-generator",
+  "version": "1.0.0",
+  "description": "Automated certificate generation and email sending",
+  "main": "server.js",
+  "scripts": {
+    "start": "node index.js"
+  },
+  "dependencies": {
+    "archiver": "^7.0.1",
+    "aws-sdk": "^2.1682.0",
+    "body-parser": "^1.20.2",
+    "camelcase": "^8.0.0",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.5",
+    "express": "^4.19.2",
+    "googleapis": "^105.0.0",
+    "nodemailer": "^6.9.14",
+    "pdf-merger-js": "^5.1.2",
+    "socket.io": "^4.7.5",
+    "uuid": "^10.0.0"
+  }
+}
