@@ -1,10 +1,10 @@
 {
   "name": "certificate-generator",
   "version": "1.0.0",
-  "description": "Automated certificate generation and email sending",
+  "description": "Automated certificate downloader",
   "main": "server.js",
   "scripts": {
-    "start": "node index.js"
+    "start": "node download.js"
   },
   "dependencies": {
     "archiver": "^7.0.1",
