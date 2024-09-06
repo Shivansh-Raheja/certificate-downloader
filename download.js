@@ -53,7 +53,7 @@ app.post('/generate-certificates', async (req, res) => {
 
   try {
     const sheetData = await getSheetData(sheetId, sheetName);
-    const filteredData = school ? sheetData.filter(row => row[4]?.toString().toUpperCase() === school.toUpperCase()) : sheetData;
+    const filteredData = school ? sheetData.filter(row => row[2]?.toString().toUpperCase() === school.toUpperCase()) : sheetData;
     const totalCertificates = filteredData.length - 1; // Subtract 1 for the header row
 
     fs.writeFileSync(logFilePath, JSON.stringify({
@@ -104,7 +104,7 @@ app.post('/unique-schools', async (req, res) => {
 
   try {
     const sheetData = await getSheetData(sheetId, sheetName);
-    const schools = [...new Set(sheetData.slice(1).map(row => row[4]?.toString().toUpperCase()))];
+    const schools = [...new Set(sheetData.slice(1).map(row => row[2]?.toString().toUpperCase()))];
 
     res.json({ schools });
   } catch (error) {
@@ -164,10 +164,10 @@ async function generateCertificatesAsSinglePDF(sheetData, date, todate) {
 
   for (let i = 1; i < sheetData.length; i++) {
     const row = sheetData[i];
-    const name = row[1]?.toString() || '';
-    const schoolName = row[4]?.toString() || '';
-    const domain = row[8]?.toString() || '';
-    const certificateNumber = row[3]?.toString().toUpperCase() || '';
+    const name = row[0]?.toString() || '';
+    const schoolName = row[2]?.toString() || '';
+    const domain = row[3]?.toString() || '';
+    const certificateNumber = row[4]?.toString().toUpperCase() || '';
     const formattedDate = formatDateToReadable(new Date(date));
     const formattedtoDate = formatDateToReadable(new Date(todate));
 
@@ -279,10 +279,10 @@ async function generateCertificates(sheetData, date, todate, updateGeneratedCoun
   
   for (let i = 0; i <totalCertificates; i++) {
     const row = sheetData[i];
-    const name = row[1]?.toString() || '';
-    const schoolName = row[4]?.toString() || '';
-    const domain = row[8]?.toString() || '';
-    const certificateNumber = row[3]?.toString().toUpperCase() || '';
+    const name = row[0]?.toString() || '';
+    const schoolName = row[2]?.toString() || '';
+    const domain = row[3]?.toString() || '';
+    const certificateNumber = row[4]?.toString().toUpperCase() || '';
 
     if (!name || !schoolName || !certificateNumber) {
       console.log(`Skipping row ${i + 1} due to missing data.`);
