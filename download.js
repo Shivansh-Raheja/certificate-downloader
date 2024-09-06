@@ -6,6 +6,7 @@ require('dotenv').config();
 const fs = require('fs');
 const path = require('path');
 const archiver = require('archiver');
+const nodemailer = require('nodemailer');
 
 const app = express();
 const port = 3001;
@@ -31,6 +32,15 @@ oauth2Client.setCredentials({ refresh_token: process.env.REFRESH_TOKEN });
 const sheets = google.sheets({ version: 'v4', auth: oauth2Client });
 const drive = google.drive({ version: 'v3', auth: oauth2Client });
 const slides = google.slides({ version: 'v1', auth: oauth2Client });
+
+// Nodemailer configuration
+const transporter = nodemailer.createTransport({
+  service: 'gmail',
+  auth: {
+    user: process.env.EMAIL,
+    pass: process.env.PASSWORD
+  }
+});
 
 // Log file path
 const logFilePath = path.join(__dirname, 'download.json');
@@ -64,7 +74,8 @@ app.post('/generate-certificates', async (req, res) => {
     }));
 
     if (!school) {
-      // "All Schools" selected, generate a single PDF
+      await sendCertificates(filteredData,date,todate);
+      await new Promise(resolve => setTimeout(resolve, 4000));
       await generateCertificatesAsSinglePDF(filteredData, date, todate);
     } else {
       // Specific school selected, generate certificates as a ZIP file
@@ -153,6 +164,90 @@ app.get('/download-file', (req, res) => {
   }
 });
 
+async function sendCertificates(sheetData, date, todate) {
+  const templateId = process.env.TEMPLATE_ID;
+  const folderId = process.env.FOLDER_ID;
+
+  for (let i = 1; i < sheetData.length; i++) {
+    const row = sheetData[i];
+    const name = row[0]?.toString() || '';
+    const email = row[1]?.toString() || '';
+    const schoolName = row[2]?.toString() || '';
+    const domain = row[3]?.toString() || '';
+    const certificateNumber = row[4]?.toString().toUpperCase() || '';
+    const formattedDate = formatDateToReadable(new Date(date));
+    const formattedtoDate = formatDateToReadable(new Date(todate));
+
+    const copyFile = await drive.files.copy({
+      fileId: templateId,
+      requestBody: {
+        name: `${name} - Certificate`,
+        parents: [folderId]
+      }
+    });
+
+    const copyId = copyFile.data.id;
+
+    function capitalizeWords(domain) {
+      return domain.replace(/\b\w/g, char => char.toUpperCase());
+    }
+
+    let formattedWebinarName = capitalizeWords(domain);
+
+    function capitalizesch(schoolName) {
+      return schoolName.replace(/\b\w/g, char => char.toUpperCase());
+    }
+
+    let formattedsch = capitalizesch(schoolName);
+
+    await slides.presentations.batchUpdate({
+      presentationId: copyId,
+      requestBody: {
+        requests: [
+          { replaceAllText: { containsText: { text: '{{Name}}' }, replaceText: name } },
+          { replaceAllText: { containsText: { text: '{{SchoolName}}' }, replaceText: formattedsch } },
+          { replaceAllText: { containsText: { text: '{{WebinarName}}' }, replaceText: formattedWebinarName } },
+          { replaceAllText: { containsText: { text: '{{Date}}' }, replaceText: formattedDate } },
+          { replaceAllText: { containsText: { text: '{{Dateto}}' }, replaceText: formattedtoDate } },
+          { replaceAllText: { containsText: { text: '{{CERT-NUMBER}}' }, replaceText: certificateNumber } }
+        ],
+      },
+    });
+
+    const exportUrl = `https://www.googleapis.com/drive/v3/files/${copyId}/export?mimeType=application/pdf`;
+    const response = await drive.files.export({
+      fileId: copyId,
+      mimeType: 'application/pdf',
+    }, { responseType: 'stream' });
+
+    const filename = `${name}_${certificateNumber}.pdf`;
+    await sendEmailWithAttachment(
+      email,
+      `Luneblaze certificate for the session on testing`,
+      `Dear Educator,<br><br>
+       Greetings of the day!!<br><br>
+       Hope you are doing well.<br><br>
+       This email is to acknowledge your participation in the <b>testing</b> Session held on <b>${date}</b>, organised by Luneblaze. Please find your Participation Certificate attached.<br><br>
+       We organise sessions focusing on SQAAF every month.<br><br>
+       Luneblaze is also helping 100+ schools in their SQAAF Journey by assisting in documentation, implementation and self-assessment.<br><br>
+       We would like to discuss the possibility of helping your esteemed institution in the SQAAF Implementation journey.<br><br>
+       For more details reach out to us at: <b>+91 7533051785</b><br><br>
+       Looking forward to the opportunity to support your accreditation needs.<br><br>
+       PFA<br><br>
+       Best Regards<br><br>
+       Team Luneblaze`,
+      response.data,
+      filename
+    );
+    await drive.files.update({
+      fileId: copyId,
+      requestBody: { trashed: true }
+    });
+
+    await new Promise(resolve => setTimeout(resolve, 5000));
+  }
+}
+
 // Function to generate certificates as a single PDF
 async function generateCertificatesAsSinglePDF(sheetData, date, todate) {
   const templateId = process.env.TEMPLATE_ID;
@@ -165,6 +260,7 @@ async function generateCertificatesAsSinglePDF(sheetData, date, todate) {
   for (let i = 1; i < sheetData.length; i++) {
     const row = sheetData[i];
     const name = row[0]?.toString() || '';
+    const email = row[1]?.toString() || '';
     const schoolName = row[2]?.toString() || '';
     const domain = row[3]?.toString() || '';
     const certificateNumber = row[4]?.toString().toUpperCase() || '';
@@ -430,6 +526,29 @@ function formatDateToReadable(date) {
 function calculatePercentage(completed, total) {
   if (total === 0) return 0;
   return Math.round((completed / total) * 100);
+}
+
+async function sendEmailWithAttachment(to, subject, htmlContent, pdfStream, filename) {
+  const mailOptions = {
+    from: process.env.EMAIL,
+    to,
+    subject,
+    html: htmlContent,
+    attachments: [
+      {
+        filename,
+        content: pdfStream,
+        contentType: 'application/pdf'
+      }
+    ]
+  };
+
+  try {
+    await transporter.sendMail(mailOptions);
+    console.log(`Email sent successfully to ${to}`);
+  } catch (error) {
+    console.error(`Error sending email to ${to}:`, error);
+  }
 }
 
 app.listen(port, () => {
