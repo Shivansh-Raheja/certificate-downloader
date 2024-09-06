@@ -214,6 +214,7 @@ async function generateCertificatesAsSinglePDF(sheetData, date, todate) {
     }, { responseType: 'stream' });
 
     const filePath = path.join(__dirname, `temp_${name}_${certificateNumber}.pdf`);
+    console.log(`Processing certificate for: ${name} - ${certificateNumber}`);
     const writeStream = fs.createWriteStream(filePath);
     response.data.pipe(writeStream);
 
