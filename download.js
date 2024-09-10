@@ -221,24 +221,25 @@ async function sendCertificates(sheetData, date, todate) {
     }, { responseType: 'stream' });
 
     const filename = `${name}_${certificateNumber}.pdf`;
-    await sendEmailWithAttachment(
-      email,
-      `Luneblaze certificate for the session on testing`,
-      `Dear Educator,<br><br>
-       Greetings of the day!!<br><br>
-       Hope you are doing well.<br><br>
-       This email is to acknowledge your participation in the <b>testing</b> Session held on <b>${date}</b>, organised by Luneblaze. Please find your Participation Certificate attached.<br><br>
-       We organise sessions focusing on SQAAF every month.<br><br>
-       Luneblaze is also helping 100+ schools in their SQAAF Journey by assisting in documentation, implementation and self-assessment.<br><br>
-       We would like to discuss the possibility of helping your esteemed institution in the SQAAF Implementation journey.<br><br>
-       For more details reach out to us at: <b>+91 7533051785</b><br><br>
-       Looking forward to the opportunity to support your accreditation needs.<br><br>
-       PFA<br><br>
-       Best Regards<br><br>
-       Team Luneblaze`,
-      response.data,
-      filename
-    );
+await sendEmailWithAttachment(
+  email,
+  `GeniusHub Internship Completion Certificate`,
+  `Dear ${name},<br><br>
+   Greetings of the day!!<br><br>
+   Thank you for participating in the GeniusHub Internship Program.We wish you all the best in your future endeavors.Please find your certificate attached.<br><br>
+   Warm regards,<br><br>
+   <b>Nisha Jain</b><br>
+   <b>Internships Program Manager</b><br>
+   <b>9873331785</b><br>
+   <img src="https://upload.wikimedia.org/wikipedia/commons/a/a5/Instagram_icon.png" alt="Instagram" width="20" height="20" style="vertical-align:middle;">: 
+   <a href="https://www.instagram.com/geniushub_internships" target="_blank"> 
+     @geniushub_internships
+   </a><br>
+   <a href="https://www.geniushub.in/" target="_blank">https://www.geniushub.in</a>`,
+  response.data,
+  filename
+);
+
     await drive.files.update({
       fileId: copyId,
       requestBody: { trashed: true }
@@ -530,7 +531,7 @@ function calculatePercentage(completed, total) {
 
 async function sendEmailWithAttachment(to, subject, htmlContent, pdfStream, filename) {
   const mailOptions = {
-    from: process.env.EMAIL,
+    from: '"GeniusHub - Unleash your Genius" <Certificate@geniushub.in>',
     to,
     subject,
     html: htmlContent,
