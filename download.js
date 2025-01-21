@@ -226,9 +226,9 @@ await sendEmailWithAttachment(
   `Internship Completion Certificate`,
   `Dear ${name},<br><br>
    Greetings from GeniusHub!!<br><br>
-   We sincerely appreciate your participation in the GeniusHub Winter Internship Program -2024. Your dedication and hard work have been truly commendable.<br><br>
-   As a token of our appreciation, please find your certificate attached. We wish you all the best in your future endeavors and hope our paths cross again.<br><br>
-   Best regards,<br><br>
+   We sincerely appreciate your participation in the GeniusHub Winter Internship Program - 2024. Your dedication and hard work have been truly commendable.<br><br>
+   As a token of our appreciation, please find your certificate attached. We wish you all the best in your future endeavors and hope our paths cross again.<br><be>
+   <b>Best Regards,</b><br><br>
    <b>Nisha Jain</b><br>
    <b>Internships Program Manager</b><br>
    <b>+91-9873331785</b><br>
