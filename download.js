@@ -223,11 +223,12 @@ async function sendCertificates(sheetData, date, todate) {
     const filename = `${name}_${certificateNumber}.pdf`;
 await sendEmailWithAttachment(
   email,
-  `GeniusHub Internship Completion Certificate`,
+  `Internship Completion Certificate`,
   `Dear ${name},<br><br>
-   Greetings of the day!!<br><br>
-   Thank you for participating in the GeniusHub Internship Program.We wish you all the best in your future endeavors.Please find your certificate attached.<br><br>
-   Warm regards,<br><br>
+   Greetings from GeniusHub!!<br><br>
+   We sincerely appreciate your participation in the GeniusHub Winter Internship Program -2024. Your dedication and hard work have been truly commendable.<br><br>
+   As a token of our appreciation, please find your certificate attached. We wish you all the best in your future endeavors and hope our paths cross again.<br><br>
+   Best regards,<br><br>
    <b>Nisha Jain</b><br>
    <b>Internships Program Manager</b><br>
    <b>9873331785</b><br>
