@@ -231,7 +231,7 @@ await sendEmailWithAttachment(
    Best regards,<br><br>
    <b>Nisha Jain</b><br>
    <b>Internships Program Manager</b><br>
-   <b>9873331785</b><br>
+   <b>+91-9873331785</b><br>
    <img src="https://upload.wikimedia.org/wikipedia/commons/a/a5/Instagram_icon.png" alt="Instagram" width="20" height="20" style="vertical-align:middle;">: 
    <a href="https://www.instagram.com/geniushub_internships" target="_blank"> 
      @geniushub_internships
