@@ -223,22 +223,20 @@ async function sendCertificates(sheetData, date, todate) {
     const filename = `${name}_${certificateNumber}.pdf`;
 await sendEmailWithAttachment(
   email,
-  `Internship Completion Certificate`,
+  `Summer Internship Completion Certificate`,
   `Dear ${name},<br><br>
    Greetings from GeniusHub!!<br><br>
-   We sincerely appreciate your participation in the <b>GeniusHub Winter Internship Program - 2024</b>. Your dedication and hard work have been truly commendable.<br><br>
-   As a token of our appreciation, please find your <b>certificate attached</b>. We wish you all the best in your future endeavors.<br><br>
-   We are also excited to announce our <b>upcoming Internship Program</b> starting from June, offering opportunities to learn, grow, and work on exciting projects.<br><br>
-   Secure your spot through: https://forms.gle/DprFF1z8wxmt7VXv8 and keep continuing your journey with us in gaining a real world edge for your portfolio.<br><br>
+   We sincerely appreciate your participation in the <b>GeniusHub Summer Internship Program - 2025</b>. Your dedication and hard work have been truly commendable.<br><br>
+   As a token of our appreciation, please find your <b>Internship Completion Certificate</b> attached. We wish you all the best in your future endeavors.<br><br>
+   We are also excited to announce our <b>upcoming Autumn Internship Program</b> starting from October, offering opportunities to learn, grow, and work on exciting projects.<br><br>
+   Secure your spot through: <a href="https://forms.gle/XjwGdJPuVydMy7xq7" target="_blank">https://forms.gle/XjwGdJPuVydMy7xq7</a> and continue your journey with us to gain a real-world edge for your portfolio.<br><br>
    Looking forward to welcoming you again.<br><br>
    <b>Best Regards,</b><br><br>
    <b>Nisha Jain</b><br>
    <b>Internships Program Manager</b><br>
    <b>+91-9873331785</b><br>
-   <img src="https://upload.wikimedia.org/wikipedia/commons/a/a5/Instagram_icon.png" alt="Instagram" width="20" height="20" style="vertical-align:middle;">: 
-   <a href="https://www.instagram.com/geniushub_internships" target="_blank"> 
-     @geniushub_internships
-   </a><br>
+   <img src="https://upload.wikimedia.org/wikipedia/commons/a/a5/Instagram_icon.png" alt="Instagram" width="20" height="20" style="vertical-align:middle;"> 
+   <a href="https://www.instagram.com/geniushub_internships" target="_blank">@geniushub_internships</a><br>
    <a href="https://www.geniushub.in/" target="_blank">https://www.geniushub.in</a>`,
   response.data,
   filename
